@@ -515,6 +515,22 @@ public class AlgebraicExpression {
 	}
 
 	/**
+	 * Append a operation and a variable to the expression
+	 * @param operation
+	 * @param variable
+	 * @return a new Algebraic expression object with the modification brought upon
+	 *         it
+	 * @since 1.2
+	 */
+	public AlgebraicExpression append(Op_Operation operation, Var_Base variable) {
+		List<Var_Component> var = copy().vars;
+		List<Op_Component> op = copy().ops;
+		op.add(new Op_Component(operation, length));
+		var.add(new Var_Component(variable, length + 1));
+		return new AlgebraicExpression(var, op);
+	}
+	
+	/**
 	 * Add a variable to the expression
 	 * 
 	 * <p>

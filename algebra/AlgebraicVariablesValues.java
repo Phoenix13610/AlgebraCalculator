@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 import algebra.vars.VarValue;
 import algebra.vars.specialVars.customFunction.Func_Custom;
-import algebra.vars.specialVars.customFunction.FunctionList;
 
 /**
  * A object to hold all the values of variables and functions
@@ -16,19 +15,19 @@ import algebra.vars.specialVars.customFunction.FunctionList;
  */
 public final class AlgebraicVariablesValues {
 	public final List<VarValue> varValues;
-	public final FunctionList functionList;
+	public final List<Func_Custom> functions;
 
-	public AlgebraicVariablesValues(FunctionList functionList) {
+	public AlgebraicVariablesValues(List<Func_Custom> functionList) {
 		this(new ArrayList<VarValue>(), functionList);
 	}
 
 	public AlgebraicVariablesValues() {
-		this(new FunctionList());
+		this(new ArrayList<Func_Custom>());
 	}
 
-	public AlgebraicVariablesValues(List<VarValue> values, FunctionList functions) {
+	public AlgebraicVariablesValues(List<VarValue> values, List<Func_Custom> functions) {
 		varValues = values;
-		this.functionList = functions;
+		this.functions = functions;
 	}
 
 	public static AlgebraicVariablesValues parse(String[] values, ComponentReference reference)
@@ -43,9 +42,8 @@ public final class AlgebraicVariablesValues {
 				
 				varValue.add(VarValue.parse(s, reference));
 			}
-
 		}
-		return new AlgebraicVariablesValues(varValue, new FunctionList(funcs));
+		return new AlgebraicVariablesValues(varValue, funcs);
 	}
 
 	public String toString() {
@@ -54,14 +52,17 @@ public final class AlgebraicVariablesValues {
 			result += varValue.toString();
 			result += "\n";
 		}
-		result += functionList.toString();
+		for (Func_Custom func_Custom : functions) {
+			result+= func_Custom.toString();
+			result+="\n";
+		}
 		return result;
 	}
 
 	public boolean equals(Object obj) {
 		try {
 			AlgebraicVariablesValues aVV=(AlgebraicVariablesValues)obj;
-			return aVV.varValues.equals(varValues)&&aVV.functionList.equals(functionList);
+			return aVV.varValues.equals(varValues)&&aVV.functions.equals(functions);
 		}catch (ClassCastException e) {
 			return false;
 		}
@@ -69,6 +70,6 @@ public final class AlgebraicVariablesValues {
 	
 	public void add(AlgebraicVariablesValues otherValues) {
 		varValues.addAll(otherValues.varValues);
-		functionList.functions.addAll(otherValues.functionList.functions);
+		functions.addAll(otherValues.functions);
 	}
 }

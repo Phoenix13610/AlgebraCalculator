@@ -3,6 +3,7 @@ package algebra.vars.specialVars.customFunction;
 import algebra.AlgebraicParsingException;
 import algebra.AlgebraicRuntimeException;
 import algebra.AlgebraicSimplifyingException;
+import algebra.AlgebraicVariablesValues;
 import algebra.ComponentReference;
 import algebra.Var_Base;
 import algebra.vars.Var_Variable;
@@ -16,21 +17,21 @@ import algebra.vars.specialVars.Var_Function;
  *
  */
 public class Func_Reference extends Var_Function {
-	public final FunctionList functions;
+	public final AlgebraicVariablesValues functions;
 
 	public Func_Reference() {
 		super("", new Var_Variable(0));
 		functions = null;
 	}
 
-	public Func_Reference(String name, Var_Base number, FunctionList functions) {
+	public Func_Reference(String name, Var_Base number, AlgebraicVariablesValues functions) {
 		super(name, number);
 		this.functions = functions;
 	}
 
 	@Override
 	public Var_Base simplify() throws AlgebraicSimplifyingException, AlgebraicRuntimeException {
-		for (Func_Custom fC : functions.getFunctions()) {
+		for (Func_Custom fC : functions.functions) {
 			if (name.equals(fC.name)) {
 				return fC.evaluate(fC.varToReplace(), number.simplify()).simplify();
 			}
@@ -46,7 +47,7 @@ public class Func_Reference extends Var_Function {
 	@Override
 	public Var_Base evaluate(String name, Var_Base newValue)
 			throws AlgebraicRuntimeException, AlgebraicSimplifyingException {
-		for (Func_Custom fC : functions.getFunctions()) {
+		for (Func_Custom fC : functions.functions) {
 			if (this.name.equals(fC.name)) {
 				return fC.evaluate(name, newValue);
 			}
@@ -66,7 +67,7 @@ public class Func_Reference extends Var_Function {
 			}
 		}
 		return new Func_Reference(tName, reference.generateVarComponent(getBetweenParenthesis(name), 0).getVar(),
-				reference.varValues.functionList);
+				reference.varValues);
 	}
 
 	@Override
